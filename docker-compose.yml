@@ -1,0 +1,11 @@
+services:
+  ingestion_service:
+    build:
+      context: .          # <-- build from repo root
+      dockerfile: src/ingestion_service/Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./src/ingestion_service:/app/src/ingestion_service
+    environment:
+      - PYTHONPATH=/app/src
