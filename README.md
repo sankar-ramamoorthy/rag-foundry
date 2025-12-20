@@ -9,4 +9,3 @@ independent development and future integration:
 - ARCHITECTURE_NOTES.md
 - INGESTION_RETRIEVAL_EXPECTATIONS.md
 - INGESTION_INTEGRATION_OVERVIEW.md
-

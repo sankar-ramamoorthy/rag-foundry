@@ -1,8 +1,8 @@
-# Agentic-RAG-Platform  
+# Agentic-RAG-Platform
 ## Non-Binding Architecture Notes
 
-**Status:** Informational (Non-Binding)  
-**Audience:** Platform, Retrieval, Agent, Ingestion teams  
+**Status:** Informational (Non-Binding)
+**Audience:** Platform, Retrieval, Agent, Ingestion teams
 **Intent:** Encourage compatibility while preserving team autonomy
 
 ---

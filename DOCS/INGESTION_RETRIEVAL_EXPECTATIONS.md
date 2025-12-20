@@ -1,6 +1,6 @@
 # Ingestion ↔ Retrieval Expectations
 
-**Status:** Informational / Contract-Aligned  
+**Status:** Informational / Contract-Aligned
 **Scope:** Interaction between Ingestion and Retrieval domains
 
 ---
@@ -57,10 +57,10 @@ Retrieval must not assume:
 
 Preferred access patterns:
 
-1. API-based access  
+1. API-based access
    Retrieval queries ingestion endpoints for metadata or artifacts.
 
-2. Database read-only access  
+2. Database read-only access
    Retrieval may read from ingestion-owned schemas.
    Write access is not permitted.
 

@@ -11,7 +11,7 @@ Expand tests only as confidence grows
 
 Acceptance criteria should describe observable behavior, not implementation.
 
-Standard Acceptance Criteria Template  
+Standard Acceptance Criteria Template
 
 Add this to every issue:
 

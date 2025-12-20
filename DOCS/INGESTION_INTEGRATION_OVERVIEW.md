@@ -1,8 +1,8 @@
-# Ingestion Service  
+# Ingestion Service
 ## Integration & Compatibility Overview
 
-**Author:** Ingestion Team  
-**Status:** Informational  
+**Author:** Ingestion Team
+**Status:** Informational
 **Audience:** Platform and downstream consumers
 
 ---
