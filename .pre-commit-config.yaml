@@ -1,20 +1,19 @@
+# .pre-commit-config.yaml
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.8.3
     hooks:
       - id: ruff
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+  # ✅ Custom mypy hook using YOUR uv environment + working config
+  - repo: local
     hooks:
       - id: mypy
-        additional_dependencies:
-          - sqlalchemy
-          # if you want the SQLAlchemy typing extras (recommended with the plugin):
-          # - "sqlalchemy[mypy]"
-          # if you use pydantic-settings or other typed deps, you can add them too:
-          # - pydantic
-          # - pydantic-settings
+        name: mypy src
+        entry: uv run mypy src
+        language: system
+        types: [python]
+        pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
