@@ -187,6 +187,9 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file. However, if you prefer,
 #  you could uncomment the following to ignore the entire vscode folder
 # .vscode/
+.vscode/
+*.swp
+*.swo
 
 # Ruff stuff:
 .ruff_cache/
@@ -205,3 +208,20 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# =========================
+# Docker
+# =========================
+*.log
+*.pid
+*.sock
+volumes/
+# =========================
+# Backups & temp files
+# =========================
+*.bak
+*.backup*
+*.old
+*_backup_*
+*_backup*
+*.tmp
