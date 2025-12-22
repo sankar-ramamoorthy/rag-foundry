@@ -216,6 +216,7 @@ __marimo__/
 *.pid
 *.sock
 volumes/
+volumes/*
 # =========================
 # Backups & temp files
 # =========================
@@ -226,3 +227,5 @@ volumes/
 *_backup*
 *.tmp
 /volumes
+/volumes/*
+/volumes/ingestion-db
