@@ -13,6 +13,5 @@ class PgVectorStore(VectorStore):
 
     def __init__(self, *args, **kwargs) -> None:
         raise NotImplementedError(
-            "PgVectorStore is intentionally not implemented in IS5-MS2. "
-            "See ADR-005."
+            "PgVectorStore is intentionally not implemented in IS5-MS2. See ADR-005."
         )
