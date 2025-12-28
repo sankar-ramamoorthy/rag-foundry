@@ -5,8 +5,9 @@ import sys
 import os
 
 # Add src folder to sys.path so we can import ingestion_service
-sys.path.insert(0, \
-                os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+)
 
 # Import your Base
 from ingestion_service.core.models import Base
@@ -20,6 +21,7 @@ if config.config_file_name is not None:
 
 # Alembic autogenerate support: use the metadata of your Base
 target_metadata: MetaData = Base.metadata  # type: ignore[attr-defined]
+
 
 # -----------------------------
 # Offline migrations
@@ -36,6 +38,7 @@ def run_migrations_offline() -> None:
     )
     with context.begin_transaction():
         context.run_migrations()
+
 
 # -----------------------------
 # Online migrations
@@ -59,6 +62,7 @@ def run_migrations_online() -> None:
             include_schemas=True,
         )
         context.run_migrations()
+
 
 # -----------------------------
 # Run the appropriate migration mode

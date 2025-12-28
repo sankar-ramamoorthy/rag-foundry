@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine, Connection
+
 # Database URL for the Postgres container
 DATABASE_URL = "postgresql://ingestion_user:ingestion_pass@postgres:5432/ingestion_db"
 
