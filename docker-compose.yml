@@ -12,7 +12,7 @@ services:
       PYTHONPATH: /app/src
 
   postgres:
-    image:  pgvector/pgvector:pg15
+    image: pgvector/pgvector:pg15
     container_name: ingestion-db
     restart: unless-stopped
     ports:
@@ -23,3 +23,14 @@ services:
       POSTGRES_DB: ingestion_db
     volumes:
       - ./volumes/ingestion-db:/var/lib/postgresql/data
+
+  gradio:
+    build:
+      context: .
+      dockerfile: gradio/Dockerfile
+    ports:
+      - "7860:7860"
+    environment:
+      - API_BASE_URL=http://ingestion_service:8001
+    depends_on:
+      - ingestion_service
