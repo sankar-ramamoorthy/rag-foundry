@@ -10,9 +10,9 @@ class ChunkerFactory:
 
     # Registry: name → instance
     _registry: dict[str, BaseChunker] = {
-        "fixed_char": TextChunker(strategy="simple"),
-        "sentence": TextChunker(strategy="sentence"),
-        "paragraph": TextChunker(strategy="paragraph"),
+        "fixed_char": TextChunker(chunk_strategy="simple"),
+        "sentence": TextChunker(chunk_strategy="sentence"),
+        "paragraph": TextChunker(chunk_strategy="paragraph"),
     }
 
     @classmethod
@@ -24,8 +24,8 @@ class ChunkerFactory:
     @classmethod
     def choose_strategy(cls, content: Any, **context) -> tuple[BaseChunker, Dict]:
         """
-        Heuristic to choose a chunking strategy based on content type and length.
-        Returns (chunker instance, strategy parameters)
+        Heuristic to choose a chunk strategy based on content type and length.
+        Returns (chunker instance, chunk_strategy parameters)
         """
         if isinstance(content, str):
             if len(content) < 2000:

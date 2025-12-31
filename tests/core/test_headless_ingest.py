@@ -19,7 +19,7 @@ def test_headless_ingestion_adds_vectors(test_database_url):
     # Use MockEmbedder and PgVectorStore
     vector_store = PgVectorStore(dsn=dsn, dimension=3)
     embedder = MockEmbedder()
-    chunker = TextChunker(chunk_size=100, overlap=10, strategy="simple")
+    chunker = TextChunker(chunk_size=100, overlap=10, chunk_strategy="simple")
 
     pipeline = IngestionPipeline(
         validator=type("Validator", (), {"validate": lambda self, text: None})(),

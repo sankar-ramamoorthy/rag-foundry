@@ -10,6 +10,7 @@ class BaseChunker(ABC):
     """Abstract interface for chunking any modality."""
 
     name: str = "base"  # Default name for logging
+    chunk_strategy: str = "unknown"  # ✅ ADD THIS
 
     @abstractmethod
     def chunk(self, content: Any, **params) -> List[Chunk]:

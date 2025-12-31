@@ -14,25 +14,25 @@ class TextChunker(BaseChunker):
     name: str = "text_chunker"
 
     def __init__(
-        self, chunk_size: int = 500, overlap: int = 50, strategy: str = "simple"
+        self, chunk_size: int = 500, overlap: int = 50, chunk_strategy: str = "simple"
     ):
         self.chunk_size = chunk_size
         self.overlap = overlap
-        self.strategy = strategy
+        self.chunk_strategy = chunk_strategy
 
     def chunk(self, content: str, **params) -> List[Chunk]:
         chunk_size = params.get("chunk_size", self.chunk_size)
         overlap = params.get("overlap", self.overlap)
-        strategy = params.get("strategy", self.strategy)
+        chunk_strategy = params.get("chunk_strategy", self.chunk_strategy)
 
-        if strategy == "simple":
+        if chunk_strategy == "simple":
             return self._chunk_simple(content, chunk_size, overlap)
-        elif strategy == "sentence":
+        elif chunk_strategy == "sentence":
             return self._chunk_by_sentence(content, chunk_size, overlap)
-        elif strategy == "paragraph":
+        elif chunk_strategy == "paragraph":
             return self._chunk_by_paragraph(content, chunk_size, overlap)
         else:
-            raise ValueError(f"Unknown text chunking strategy: {strategy}")
+            raise ValueError(f"Unknown text chunk strategy: {chunk_strategy}")
 
     def _chunk_simple(self, text: str, chunk_size: int, overlap: int) -> List[Chunk]:
         chunks: List[Chunk] = []

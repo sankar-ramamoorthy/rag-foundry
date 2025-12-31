@@ -32,7 +32,7 @@ class HeadlessIngestor:
                     ingestion_id=ingestion_id,
                     chunk_id=chunk.chunk_id,
                     chunk_index=0,  # optional: could number chunks
-                    chunk_strategy=chunk.metadata.get("chunking_strategy", "unknown"),
+                    chunk_strategy=chunk.metadata.get("chunk_strategy", "unknown"),
                 ),
             )
             vector_records.append(record)
