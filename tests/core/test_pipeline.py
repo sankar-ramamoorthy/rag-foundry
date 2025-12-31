@@ -8,6 +8,7 @@ from typing import Any, List
 
 class DummyChunker(BaseChunker):
     name = "dummy"
+    chunk_strategy = "dummy"
 
     def chunk(self, content: Any, **params) -> List[Chunk]:
         return [Chunk(chunk_id="1", content=content[:5], metadata={})]
@@ -63,7 +64,7 @@ def test_pipeline_dynamic_chunker(monkeypatch):
     assert persisted_id == ingestion_id
     assert len(persisted_chunks) == 1
     assert persisted_chunks[0].content == text[:5]
-    assert persisted_chunks[0].metadata["chunking_strategy"] == "dummy"
+    assert persisted_chunks[0].metadata["chunk_strategy"] == "dummy"
     assert persisted_chunks[0].metadata["chunker_params"] == {
         "chunk_size": 5,
         "overlap": 0,
@@ -90,5 +91,5 @@ def test_pipeline_explicit_chunker():
 
     persisted_chunks, _, persisted_id = vector_store.persisted[0]
     assert persisted_id == ingestion_id
-    assert persisted_chunks[0].metadata["chunking_strategy"] == "dummy"
+    assert persisted_chunks[0].metadata["chunk_strategy"] == "dummy"
     assert persisted_chunks[0].metadata["chunker_params"] == {}

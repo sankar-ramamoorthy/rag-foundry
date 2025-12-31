@@ -7,6 +7,7 @@ from typing import Any, List
 
 class DummyChunker(BaseChunker):
     name = "dummy"
+    chunk_strategy = "dummy"  # ← ADDED THIS LINE
 
     def chunk(self, content: Any, **params) -> List[Chunk]:
         return [Chunk(chunk_id="1", content=content, metadata={})]
