@@ -41,6 +41,7 @@ class IngestionPipeline:
         3. Generate embeddings
         4. Persist chunks + embeddings
         """
+
         self._validate(text)
         chunks = self._chunk(text)
         embeddings = self._embed(chunks)

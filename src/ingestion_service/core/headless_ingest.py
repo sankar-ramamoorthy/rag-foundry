@@ -8,6 +8,8 @@ from ingestion_service.core.vectorstore.base import VectorRecord, VectorMetadata
 class HeadlessIngestor:
     """
     Runs a headless ingestion pipeline (no FastAPI involved).
+    Experimental / dev-only ingestion path.
+    Not the canonical ingestion pipeline.
     """
 
     def __init__(self, pipeline: IngestionPipeline):
@@ -19,8 +21,14 @@ class HeadlessIngestor:
         ingestion_id: str,
         source_metadata: Optional[dict] = None,
     ) -> None:
+        print("HeadlessIngestor ingest_text", text)
+        print("chunk it")
         chunks = self.pipeline._chunk(text)
+        print("chunks", chunks)
+        print("embed the chunks")
         embeddings = self.pipeline._embed(chunks)
+        print("Done embedding")
+        print("embeddings", embeddings)
 
         vector_records: List[VectorRecord] = []
 
