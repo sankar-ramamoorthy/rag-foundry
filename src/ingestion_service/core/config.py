@@ -6,6 +6,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     DATABASE_URL: str
+    EMBEDDING_PROVIDER: str = "mock"
+    OLLAMA_BASE_URL: str = "http://host.docker.internal:11434"
+    OLLAMA_EMBED_MODEL: str = "nomic-embed-text:v1.5"
+    OLLAMA_BATCH_SIZE: int = 50  # default batch size for Ollama embedding
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -15,15 +19,10 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """
-    Return cached application settings.
-
-    Environment variables and .env are read once.
-    Pyright is satisfied because Settings() is not
-    treated as a raw constructor call everywhere.
-    """
+    """Returns cached application settings."""
     return Settings()  # type: ignore[reportCallIssue]
 
 
 def reset_settings_cache():
+    """Clear cached settings for testing or reload."""
     get_settings.cache_clear()

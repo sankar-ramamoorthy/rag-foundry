@@ -23,7 +23,7 @@ def upgrade() -> None:
         """
         CREATE TABLE IF NOT EXISTS ingestion_service.vectors (
             id SERIAL PRIMARY KEY,
-            vector vector(3) NOT NULL,
+            vector vector(768) NOT NULL,
             ingestion_id TEXT NOT NULL,
             chunk_id TEXT NOT NULL,
             chunk_index INT NOT NULL,
