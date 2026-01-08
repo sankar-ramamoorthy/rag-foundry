@@ -6,6 +6,11 @@ from psycopg import connect, sql
 # -------------------------------------------------------------------------
 # Database fixtures for Docker / pgvector integration tests
 #
+# IMPORTANT RULES:
+# - Docker tests ALWAYS use real embeddings (Ollama)
+# - Embedding dimension is ALWAYS 768
+# - This schema MUST match Alembic migrations exactly
+#
 # IMPORTANT NOTE ABOUT psycopg.sql.SQL AND CURLY BRACES:
 #
 # psycopg.sql.SQL(...) uses Python-style `{}` formatting internally.
@@ -17,9 +22,6 @@ from psycopg import connect, sql
 #
 # Failure to do this results in:
 #     IndexError: tuple index out of range
-#
-# This exact issue previously caused flaky test failures.
-# Do NOT remove the double braces.
 # -------------------------------------------------------------------------
 
 
@@ -42,7 +44,8 @@ def clean_vectors_table(test_database_url):
     This fixture intentionally DROPS and RECREATES the table to guarantee:
     - schema correctness
     - no cross-test contamination
-    - alignment with Alembic MVP schema
+    - alignment with Alembic schema
+    - compatibility with real Ollama embeddings (768 dimensions)
     """
     schema = "ingestion_service"
     table = "vectors"
@@ -51,7 +54,7 @@ def clean_vectors_table(test_database_url):
         """
         CREATE TABLE {schema}.{table} (
             id SERIAL PRIMARY KEY,
-            vector vector(3) NOT NULL,
+            vector vector(768) NOT NULL,
 
             ingestion_id TEXT NOT NULL,
             chunk_id TEXT NOT NULL,
@@ -59,7 +62,8 @@ def clean_vectors_table(test_database_url):
             chunk_strategy TEXT NOT NULL,
 
             chunk_text TEXT NOT NULL,
-            source_metadata JSONB NOT NULL DEFAULT '{{}}'
+            source_metadata JSONB NOT NULL DEFAULT '{{}}',
+            provider TEXT NOT NULL DEFAULT 'mock'
         )
         """
     ).format(
@@ -69,18 +73,20 @@ def clean_vectors_table(test_database_url):
 
     with connect(test_database_url) as conn:
         with conn.cursor() as cur:
+            # Drop table to guarantee clean schema
             cur.execute(
                 sql.SQL("DROP TABLE IF EXISTS {schema}.{table} CASCADE").format(
                     schema=sql.Identifier(schema),
                     table=sql.Identifier(table),
                 )
             )
+            # Recreate with correct pgvector dimension
             cur.execute(create_table_sql)
 
-    # Run the test
+    # ---- run the test ----
     yield
 
-    # Optional cleanup (kept for clarity and safety)
+    # Optional cleanup (safety + clarity)
     with connect(test_database_url) as conn:
         with conn.cursor() as cur:
             cur.execute(

@@ -1,4 +1,4 @@
-"""Add vectors table using pgvector (with chunk text + metadata)
+"""Add vectors table using pgvector (with chunk text + metadata + provider)
 
 Revision ID: 20251229_add_vectors_table
 Revises: bb0f22648df9
@@ -18,7 +18,7 @@ def upgrade() -> None:
     # Enable pgvector extension
     op.execute("CREATE EXTENSION IF NOT EXISTS vector")
 
-    # Create vectors table (MVP schema)
+    # Create vectors table with provider column
     op.execute(
         """
         CREATE TABLE IF NOT EXISTS ingestion_service.vectors (
@@ -29,7 +29,8 @@ def upgrade() -> None:
             chunk_index INT NOT NULL,
             chunk_strategy TEXT NOT NULL,
             chunk_text TEXT NOT NULL,
-            source_metadata JSONB NOT NULL DEFAULT '{}'
+            source_metadata JSONB NOT NULL DEFAULT '{}',
+            provider TEXT NOT NULL DEFAULT 'mock'
         )
         """
     )

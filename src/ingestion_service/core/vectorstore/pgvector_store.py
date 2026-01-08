@@ -1,48 +1,61 @@
 # src/ingestion_service/core/vectorstore/pgvector_store.py
-
 from __future__ import annotations
-
-from typing import Sequence, Iterable, List, Any, Dict
+from typing import Sequence, Iterable, List, Any
 import psycopg
 from psycopg import sql
 from psycopg.types.json import Jsonb
+import logging
 
-from ingestion_service.core.chunks import Chunk
 from ingestion_service.core.vectorstore.base import (
     VectorStore,
     VectorRecord,
     VectorMetadata,
 )
+from ingestion_service.core.chunks import Chunk
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class PgVectorStore(VectorStore):
-    """
-    PostgreSQL + pgvector-backed VectorStore.
-
-    Production vector persistence layer for MS2a+.
-
-    Design notes:
-    - Uses raw psycopg (no ORM)
-    - Schema is owned by Alembic migrations
-    - Stores embeddings + chunk metadata
-    - Adapter-compatible with MS2/MS2a pipeline (.persist)
-    """
-
     SCHEMA = "ingestion_service"
     TABLE_NAME = "vectors"
 
-    def __init__(self, dsn: str, dimension: int) -> None:
+    def __init__(self, dsn: str, dimension: int, provider: str = "mock") -> None:
         self._dsn = dsn
         self._dimension = dimension
+        self._provider = provider
         self._validate_table()
-
-    # ==========================================================
-    # VectorStore interface
-    # ==========================================================
 
     @property
     def dimension(self) -> int:
         return self._dimension
+
+    def persist(
+        self, chunks: list[Chunk], embeddings: list[Any], ingestion_id: str
+    ) -> None:
+        """Convert chunks+embeddings to VectorRecords and add to store."""
+        logging.debug(
+            "PgVectorStore.persist: %d chunks, %d embeddings",
+            len(chunks),
+            len(embeddings),
+        )
+        records = []
+        for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+            record = VectorRecord(
+                vector=embedding,
+                metadata=VectorMetadata(
+                    ingestion_id=ingestion_id,
+                    chunk_id=chunk.chunk_id,
+                    chunk_index=i,
+                    chunk_strategy=chunk.metadata.get("chunk_strategy", "unknown"),
+                    chunk_text=chunk.content,
+                    source_metadata=chunk.metadata,
+                    provider=self._provider,
+                ),
+            )
+            records.append(record)
+        self.add(records)
+        logging.debug("PgVectorStore.persist: added %d records", len(records))
 
     def add(self, records: Iterable[VectorRecord]) -> None:
         insert_sql = sql.SQL(
@@ -54,8 +67,9 @@ class PgVectorStore(VectorStore):
                  chunk_index,
                  chunk_strategy,
                  chunk_text,
-                 source_metadata)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+                 source_metadata,
+                 provider)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
         ).format(
             schema=sql.Identifier(self.SCHEMA),
@@ -74,14 +88,13 @@ class PgVectorStore(VectorStore):
                             record.metadata.chunk_index,
                             record.metadata.chunk_strategy,
                             record.metadata.chunk_text,
-                            Jsonb(record.metadata.source_metadata or {}),  # safe JSONB
+                            Jsonb(record.metadata.source_metadata or {}),
+                            record.metadata.provider or self._provider,
                         ),
                     )
 
     def similarity_search(
-        self,
-        query_vector: Sequence[float],
-        k: int,
+        self, query_vector: Sequence[float], k: int
     ) -> List[VectorRecord]:
         search_sql = sql.SQL(
             """
@@ -92,7 +105,8 @@ class PgVectorStore(VectorStore):
                 chunk_index,
                 chunk_strategy,
                 chunk_text,
-                source_metadata
+                source_metadata,
+                provider
             FROM {schema}.{table}
             ORDER BY vector <-> (%s::vector)
             LIMIT %s
@@ -116,6 +130,7 @@ class PgVectorStore(VectorStore):
                         chunk_strategy,
                         chunk_text,
                         source_metadata,
+                        provider,
                     ) = row
 
                     metadata = VectorMetadata(
@@ -125,8 +140,8 @@ class PgVectorStore(VectorStore):
                         chunk_strategy=chunk_strategy,
                         chunk_text=chunk_text,
                         source_metadata=source_metadata,
+                        provider=provider,
                     )
-
                     results.append(VectorRecord(vector=vector, metadata=metadata))
 
         return results
@@ -146,74 +161,27 @@ class PgVectorStore(VectorStore):
             with conn.cursor() as cur:
                 cur.execute(delete_sql, (ingestion_id,))
 
-    def reset(self) -> None:
-        truncate_sql = sql.SQL(
+    def _validate_table(self) -> None:
+        """Fail fast if the vectors table or vector column is missing."""
+        table_probe = sql.SQL(
             """
-            TRUNCATE TABLE {schema}.{table}
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = {schema}
+              AND table_name = {table}
             """
         ).format(
-            schema=sql.Identifier(self.SCHEMA),
-            table=sql.Identifier(self.TABLE_NAME),
+            schema=sql.Literal(self.SCHEMA),
+            table=sql.Literal(self.TABLE_NAME),
         )
 
-        with psycopg.connect(self._dsn) as conn:
-            with conn.cursor() as cur:
-                cur.execute(truncate_sql)
-
-    # ==========================================================
-    # MS2 / MS2a pipeline adapter
-    # ==========================================================
-
-    def persist(
-        self,
-        *,
-        chunks: List[Chunk],
-        embeddings: List[Any],
-        ingestion_id: str,
-        source_metadata: Dict[str, Any] | None = None,
-    ) -> None:
-        """
-        Adapter for MS2/MS2a pipeline contract.
-
-        Converts Chunk + embedding pairs into VectorRecords
-        and persists them using the VectorStore API.
-        """
-        records: List[VectorRecord] = []
-
-        for index, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
-            record = VectorRecord(
-                vector=embedding,
-                metadata=VectorMetadata(
-                    ingestion_id=ingestion_id,
-                    chunk_id=chunk.chunk_id,
-                    chunk_index=index,
-                    chunk_strategy=chunk.metadata.get("chunk_strategy", "unknown"),
-                    chunk_text=str(chunk.content),
-                    source_metadata=source_metadata or {},
-                ),
-            )
-            records.append(record)
-
-        self.add(records)
-
-    # ==========================================================
-    # Internal
-    # ==========================================================
-
-    def _validate_table(self) -> None:
-        """
-        Fail-fast schema validation.
-
-        Ensures the vectors table exists and has a pgvector column.
-        """
-        probe_sql = sql.SQL(
+        column_probe = sql.SQL(
             """
             SELECT 1
             FROM information_schema.columns
             WHERE table_schema = {schema}
               AND table_name = {table}
               AND column_name = 'vector'
-              AND udt_name = 'vector'
             """
         ).format(
             schema=sql.Literal(self.SCHEMA),
@@ -223,12 +191,17 @@ class PgVectorStore(VectorStore):
         try:
             with psycopg.connect(self._dsn) as conn:
                 with conn.cursor() as cur:
-                    cur.execute(probe_sql)
+                    cur.execute(table_probe)
                     if cur.rowcount == 0:
-                        raise RuntimeError("pgvector column not found")
+                        raise RuntimeError("vectors table missing")
+
+                    cur.execute(column_probe)
+                    if cur.rowcount == 0:
+                        raise RuntimeError("vector column missing")
+
         except Exception as exc:
             raise RuntimeError(
-                f"PgVectorStore schema validation failed: "
-                f"table '{self.SCHEMA}.{self.TABLE_NAME}' missing or incompatible. "
-                f"Have you run Alembic migrations?"
+                "PgVectorStore schema validation failed: "
+                "table 'ingestion_service.vectors' missing or incompatible. "
+                "Have you run Alembic migrations?"
             ) from exc

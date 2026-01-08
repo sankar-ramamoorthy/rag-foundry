@@ -21,6 +21,7 @@ services:
     environment:
       DATABASE_URL: postgresql://ingestion_user:ingestion_pass@postgres:5432/ingestion_test
       PYTHONPATH: /app/src
+      EMBEDDING_PROVIDER: ollama
     volumes:
       - ./src/ingestion_service:/app/src/ingestion_service
     depends_on:

@@ -26,16 +26,13 @@ class NoOpValidator:
 
 
 def _build_pipeline() -> IngestionPipeline:
-    """
-    Build ingestion pipeline using the factory embedder
-    and PgVectorStore.
-    """
     settings = get_settings()
     embedder = get_embedder(settings.EMBEDDING_PROVIDER)
 
     vector_store = PgVectorStore(
         dsn=settings.DATABASE_URL,
-        dimension=getattr(embedder, "dimension", 3),  # default 3 for MockEmbedder
+        dimension=getattr(embedder, "dimension", 3),
+        provider=settings.EMBEDDING_PROVIDER,
     )
 
     return IngestionPipeline(
