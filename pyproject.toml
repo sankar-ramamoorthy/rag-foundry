@@ -18,6 +18,8 @@ dependencies = [
     "sqlalchemy-utils>=0.42.1",
     "uvicorn>=0.38.0",
     "requests>=2.32.5",
+    "pillow>=12.0.0",
+    "pytesseract>=0.3.13",
 ]
 
 [project.optional-dependencies]

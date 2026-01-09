@@ -6,8 +6,11 @@ WORKDIR /app
 
 # Copy entire repo (so pyproject.toml is available)
 COPY . .
-RUN apt-get update && apt-get install -y postgresql-client
-
+#RUN apt-get update && apt-get install -y postgresql-client
+# Install system dependencies: PostgreSQL client + Tesseract OCR
+RUN apt-get update && \
+    apt-get install -y postgresql-client tesseract-ocr && \
+    rm -rf /var/lib/apt/lists/*
 # Install all dependencies from pyproject.toml
 RUN uv sync
 # Install all dependencies from pyproject.toml using pip (this ensures everything is installed)

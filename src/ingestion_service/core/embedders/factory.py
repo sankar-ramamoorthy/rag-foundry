@@ -33,5 +33,7 @@ def get_embedder(provider: str | None = None):
     elif provider_str == "mock":  # ← EXPLICIT
         return MockEmbedder()
     else:
-        raise ValueError(f"Unknown embedder provider: '{provider_str}'.\
-                          Valid: {VALID_PROVIDERS}")
+        raise ValueError(
+            f"Unknown embedder provider: '{provider_str}'.\
+                          Valid: {VALID_PROVIDERS}"
+        )
