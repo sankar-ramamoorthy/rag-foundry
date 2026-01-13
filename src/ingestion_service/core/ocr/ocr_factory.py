@@ -15,6 +15,7 @@ OCR_ENGINES: Dict[str, OCRExtractor] = {
     TesseractOCR.name: tesseract_ocr,  # "tesseract"
     # PaddleOCRExtractor.name: paddle_ocr,  # "paddle"
 }
+OCR_ENGINES["default"] = tesseract_ocr
 
 
 def get_ocr_engine(name: str = "tesseract") -> OCRExtractor:

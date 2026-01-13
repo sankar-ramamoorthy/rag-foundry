@@ -6,6 +6,7 @@ from ingestion_service.core.document_graph.builder import DocumentGraphBuilder
 from ingestion_service.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
 from ingestion_service.core.pipeline import IngestionPipeline
 from ingestion_service.core.chunks import Chunk
+from ingestion_service.core.extractors.base import ExtractedArtifact
 
 
 class HeadlessPDFIngestor:
@@ -15,12 +16,47 @@ class HeadlessPDFIngestor:
     - Extracts text blocks and images from PDF bytes
     - Builds a deterministic document graph
     - Chunks text artifacts
-    - Preserves provenance and metadata
     - Persists embeddings to vector store
     """
 
-    def __init__(self, pipeline: IngestionPipeline):
+    def __init__(self, pipeline: IngestionPipeline, ocr_provider: str = "default"):
         self.pipeline = pipeline
+        self.ocr_provider = ocr_provider
+
+    def _run_ocr_and_expand_artifacts(
+        self, artifacts: List[ExtractedArtifact]
+    ) -> List[ExtractedArtifact]:
+        """
+        Given a list of artifacts, run OCR on image artifacts.
+        If OCR produced text, create a new text artifact for OCR text,
+        preserving order and provenance deterministically.
+        """
+        enriched: List[ExtractedArtifact] = []
+
+        for artifact in artifacts:
+            enriched.append(artifact)
+
+            if artifact.type == "image" and artifact.image_bytes:
+                # Run OCR on image
+                from ingestion_service.core.ocr.utils import enrich_image_with_ocr
+
+                image_with_ocr = enrich_image_with_ocr(artifact, self.ocr_provider)
+
+                if image_with_ocr.ocr_text:
+                    # Create a synthetic text artifact representing the OCR text
+                    # Keep the same page but a slightly greater order_index
+                    ocr_artifact = ExtractedArtifact(
+                        type="text",
+                        source_file=image_with_ocr.source_file,
+                        page_number=image_with_ocr.page_number,
+                        order_index=artifact.order_index
+                        + 1,  # deterministic after image
+                        text=image_with_ocr.ocr_text,
+                        image_bytes=None,
+                    )
+                    enriched.append(ocr_artifact)
+
+        return enriched
 
     def ingest_pdf(
         self, file_bytes: bytes, source_name: str, ingestion_id: str
@@ -28,6 +64,9 @@ class HeadlessPDFIngestor:
         # 1️⃣ Extract artifacts from PDF bytes
         extractor = PDFExtractor()
         artifacts = extractor.extract(file_bytes, source_name)
+
+        # NEW: integrate OCR text as new text artifacts
+        artifacts = self._run_ocr_and_expand_artifacts(artifacts)
 
         # 2️⃣ Build document graph
         graph_builder = DocumentGraphBuilder()

@@ -1,3 +1,4 @@
+# src/ingestion_service/core/extractors/base.py
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -33,6 +34,9 @@ class ExtractedArtifact:
     # content (one of these must be populated depending on type)
     text: Optional[str] = None
     image_bytes: Optional[bytes] = None
+
+    # NEW: OCR text for images
+    ocr_text: Optional[str] = None
 
     # layout metadata (optional, for future use)
     bbox: Optional[Tuple[float, float, float, float]] = None

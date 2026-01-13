@@ -78,7 +78,7 @@ def test_ingest_sample_pdf_real_pipeline(clean_vectors_table, test_database_url)
     # ---- Patch assembler graph to associate images with chunks (optional) ----
     assembler = PDFChunkAssembler()
     if hasattr(ingestor, "_last_document_graph"):
-        graph = ingestor._last_document_graph # type: ignore[attr-defined]
+        graph = ingestor._last_document_graph  # type: ignore[attr-defined]
         # For each image node, add an edge to all text nodes on same page
         for node_id, node in graph.nodes.items():
             if node.artifact.type == "image":

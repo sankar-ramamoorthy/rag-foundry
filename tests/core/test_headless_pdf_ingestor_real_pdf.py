@@ -55,7 +55,7 @@ def test_ingest_sample_pdf():
             return [[0.1, 0.2]] * len(chunks)
 
     pipeline = DummyPipeline()
-    ingestor = HeadlessPDFIngestor(pipeline=pipeline)
+    ingestor = HeadlessPDFIngestor(pipeline=pipeline, ocr_provider="tesseract")
 
     # ---- Ingest PDF ----
     chunks = ingestor.ingest_pdf(
@@ -67,7 +67,7 @@ def test_ingest_sample_pdf():
     # ---- Patch document graph to associate images with text chunks ----
     assembler = PDFChunkAssembler()
     if hasattr(ingestor, "_last_document_graph"):
-        graph = ingestor._last_document_graph # type: ignore[attr-defined]
+        graph = ingestor._last_document_graph  # type: ignore[attr-defined]
 
         # For each image node, link it to all text nodes on the same page
         for node_id, node in graph.nodes.items():

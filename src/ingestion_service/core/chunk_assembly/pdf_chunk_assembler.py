@@ -13,56 +13,47 @@ class PDFChunkAssembler:
     Converts a DocumentGraph into chunks using real chunkers.
 
     Rules:
-    - Only text artifacts are chunked
+    - Native text OR OCR text are chunked
     - Chunking is delegated to ChunkerFactory
     - Chunk IDs are deterministic
     - Image → text associations are preserved in metadata
-
-    DEBUG MODE: Prints edges, artifact IDs, and image associations
     """
 
     def assemble(self, graph: DocumentGraph) -> List[Chunk]:
         chunks: List[Chunk] = []
 
-        print("\n=== PDFChunkAssembler Debug Start ===")
-
         # ---------------------------------------------------------
-        # Precompute image → text associations
+        # Map image → text edges for associated_image_ids
         # ---------------------------------------------------------
         images_by_text: Dict[str, Set[str]] = {}
-        print("\n--- DocumentGraph Edges ---")
         for edge in graph.edges:
-            print(f"Edge: {edge.relation}: {edge.from_id} → {edge.to_id}")
             if edge.relation == "image_to_text":
                 images_by_text.setdefault(edge.to_id, set()).add(edge.from_id)
 
-        print("\n--- images_by_text mapping ---")
-        for text_id, image_ids in images_by_text.items():
-            print(f"{text_id}: {image_ids}")
-
-        print("\n--- Graph Nodes ---")
-        for node in graph.nodes.values():
-            artifact = node.artifact
-            print(
-                f"Node ID: {node.artifact_id}, \
-                    type: {artifact.type}, page: {artifact.page_number}"
-            )
-
         # ---------------------------------------------------------
-        # Chunk text artifacts
+        # Create chunks from text or OCR text
         # ---------------------------------------------------------
         for node in graph.nodes.values():
             artifact = node.artifact
 
-            if artifact.type != "text" or not artifact.text:
+            # Decide which text to use:
+            # - Prefer native text if present
+            # - Otherwise use OCR text (if any)
+            content_to_chunk: str | None = None
+            if artifact.text:
+                content_to_chunk = artifact.text
+            elif artifact.ocr_text:
+                content_to_chunk = artifact.ocr_text
+
+            if not content_to_chunk:
                 continue
 
             # Choose chunker dynamically
-            chunker, chunker_params = ChunkerFactory.choose_strategy(artifact.text)
+            chunker, chunker_params = ChunkerFactory.choose_strategy(content_to_chunk)
             chunk_strategy = getattr(chunker, "chunk_strategy", "unknown")
             chunker_name = getattr(chunker, "name", chunker.__class__.__name__)
 
-            produced_chunks = chunker.chunk(artifact.text, **chunker_params)
+            produced_chunks = chunker.chunk(content_to_chunk, **chunker_params)
 
             for idx, produced_chunk in enumerate(produced_chunks):
                 produced_chunk.chunk_id = f"{node.artifact_id}:chunk:{idx}"
@@ -77,15 +68,11 @@ class PDFChunkAssembler:
                         "chunk_strategy": chunk_strategy,
                         "chunker_name": chunker_name,
                         "chunker_params": dict(chunker_params),
+                        # Optional: expose OCR text if this chunk came from OCR
+                        "ocr_text": artifact.ocr_text if artifact.ocr_text else None,
                     }
-                )
-
-                print(
-                    f"Produced chunk {produced_chunk.chunk_id}, "
-                    f"associated_image_ids={associated_image_ids}"
                 )
 
                 chunks.append(produced_chunk)
 
-        print("\n=== PDFChunkAssembler Debug End ===\n")
         return chunks
