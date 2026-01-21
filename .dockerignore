@@ -8,6 +8,10 @@ __pycache__/
 .venv/
 venv/
 .env
+**/.venv/
+**/__pycache__/
+**/.git/
+**/.pytest_cache/
 
 # Docker files (if rebuilding)
 Dockerfile*

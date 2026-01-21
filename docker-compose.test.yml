@@ -12,19 +12,18 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "5432:5432"  # optional, allows host access
+      - "5432:5432"
 
   ingestion_service:
     build:
       context: .
-      dockerfile: src/ingestion_service/Dockerfile
+      dockerfile: src/services/ingestion_service/Dockerfile
     environment:
       DATABASE_URL: postgresql://ingestion_user:ingestion_pass@postgres:5432/ingestion_test
       PYTHONPATH: /app/src
       EMBEDDING_PROVIDER: ollama
-  # volumes:
-  #   - ./src/ingestion_service:/app/src/ingestion_service
-  # Commented out for testing/CI to avoid hiding dependencies installed in the image
+    # volumes:
+    #   - ./src/services/ingestion_service:/app/src/ingestion_service
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,8 +1,16 @@
-# RAG-Ingestion-Engine
+## Project Lineage
+
+This project originated from `RAG-Ingestion-Engine` and represents a
+forward-looking evolution toward a service-oriented RAG architecture.
+
+The original repository remains stable and unchanged.
+
+
+# rag-foundry
 # Agentic-Rag-Ingestion/README.md
 
 **Category:** Core Microservice / Data Ingestion Layer
-**Purpose:** RAG-Ingestion-Engine is the ingestion backbone for the Agentic-RAG-Platform. It is responsible for accepting raw content — including text, documents, PDFs, and images — and transforming it into structured, vectorized representations ready for retrieval-augmented generation (RAG).
+**Purpose:** rag-foundry is the ingestion backbone for the Agentic-RAG-Platform. It is responsible for accepting raw content — including text, documents, PDFs, and images — and transforming it into structured, vectorized representations ready for retrieval-augmented generation (RAG).
 
 ---
 
@@ -117,7 +125,7 @@ For further discussion, use GitHub Issues or reach out to the maintainers.
 
 ## **Acknowledgements**
 
-The development of RAG-Ingestion-Engine has been accelerated and guided with the help of several resources:
+The development of rag-foundry has been accelerated and guided with the help of several resources:
 
 * Generative AI tools: [ChatGPT](https://chat.openai.com), [Perplexity AI](https://www.perplexity.ai), [Google](https://www.google.com), and [DuckAI](https://duck.ai).
 * Online community and documentation resources: [Stack Overflow](https://stackoverflow.com), [Docker Documentation](https://docs.docker.com), [GitHub](https://github.com), [Astral Docs](https://docs.astral.sh), among others.

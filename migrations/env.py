@@ -10,7 +10,7 @@ sys.path.insert(
 )
 
 # Import your Base
-from ingestion_service.core.models import Base
+from ingestion_service.src.core.models import Base
 
 # Alembic Config object
 config = context.config

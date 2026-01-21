@@ -24,13 +24,13 @@ def upgrade() -> None:
         CREATE TABLE IF NOT EXISTS ingestion_service.vectors (
             id SERIAL PRIMARY KEY,
             vector vector(768) NOT NULL,
-            ingestion_id TEXT NOT NULL,
+            ingestion_id UUID NOT NULL,
             chunk_id TEXT NOT NULL,
             chunk_index INT NOT NULL,
             chunk_strategy TEXT NOT NULL,
             chunk_text TEXT NOT NULL,
             source_metadata JSONB NOT NULL DEFAULT '{}',
-            provider TEXT NOT NULL DEFAULT 'mock'
+            provider TEXT NOT NULL DEFAULT 'ollama'
         )
         """
     )
