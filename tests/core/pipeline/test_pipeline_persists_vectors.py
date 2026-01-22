@@ -2,13 +2,16 @@ import uuid
 import pytest
 from typing import cast
 
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.embedders.ollama import OllamaEmbedder
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.chunkers.text import TextChunker
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.chunkers.text import TextChunker
+#from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.http_vectorstore import HttpVectorStore
+from ingestion_service.src.core.config import get_settings
+from shared.embedders.factory import get_embedder
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.config import reset_settings_cache
 
 pytest_plugins = ["tests.conftest_db"]
 
@@ -17,16 +20,26 @@ pytest_plugins = ["tests.conftest_db"]
 @pytest.mark.docker
 def test_pipeline_persists_vectors_pgvector(clean_vectors_table, test_database_url):
     reset_settings_cache()
+    settings = get_settings()
+    embedder = get_embedder(
+        provider=settings.EMBEDDING_PROVIDER,
+        ollama_base_url=settings.OLLAMA_BASE_URL,
+        ollama_model=settings.OLLAMA_EMBED_MODEL,
+        ollama_batch_size=settings.OLLAMA_BATCH_SIZE,
+    )
 
     embedder = cast(OllamaEmbedder, get_embedder("ollama"))
     assert embedder.dimension == 768
 
-    vector_store = PgVectorStore(
-        dsn=test_database_url,
-        dimension=embedder.dimension,
-        provider="ollama",
+    #vector_store = PgVectorStore(
+    #    dsn=test_database_url,
+    #    dimension=embedder.dimension,
+    #    provider="ollama",
+    #)
+    vector_store = HttpVectorStore(  # ✅ Call vector_store_service via HTTP
+        base_url=settings.VECTOR_STORE_SERVICE_URL,
+        provider=provider,
     )
-
     chunker = TextChunker(chunk_size=50, overlap=5, chunk_strategy="simple")
     validator = type("Validator", (), {"validate": lambda self, text: None})()
 

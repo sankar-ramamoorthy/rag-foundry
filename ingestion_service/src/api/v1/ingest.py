@@ -35,10 +35,12 @@ class NoOpValidator:
 
 def _build_pipeline(provider: str) -> IngestionPipeline:
     settings = get_settings()
-    embedder = get_embedder(    provider=settings.EMBEDDING_PROVIDER,
-    ollama_base_url=settings.OLLAMA_BASE_URL,
-    ollama_model=settings.OLLAMA_EMBED_MODEL,
-    ollama_batch_size=settings.OLLAMA_BATCH_SIZE,)
+    embedder = get_embedder(
+        provider=settings.EMBEDDING_PROVIDER,
+        ollama_base_url=settings.OLLAMA_BASE_URL,
+        ollama_model=settings.OLLAMA_EMBED_MODEL,
+        ollama_batch_size=settings.OLLAMA_BATCH_SIZE,
+    )
 
     # vector_store = PgVectorStore(
     #    dsn=settings.DATABASE_URL,

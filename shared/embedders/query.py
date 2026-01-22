@@ -4,7 +4,8 @@ import uuid
 from typing import List
 
 from shared.chunks import Chunk
-#from shared.embedders.factory import get_embedder
+
+# from shared.embedders.factory import get_embedder
 from shared.embedders.base import BaseEmbedder
 
 
@@ -28,8 +29,6 @@ def embed_query(query: str, embedder: BaseEmbedder) -> List[float]:
     embeddings = embedder.embed([query_chunk])
 
     if not embeddings or len(embeddings) != 1:
-        raise RuntimeError(
-            f"Expected 1 embedding for query, got {len(embeddings)}"
-        )
+        raise RuntimeError(f"Expected 1 embedding for query, got {len(embeddings)}")
 
     return embeddings[0]

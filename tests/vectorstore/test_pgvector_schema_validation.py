@@ -2,7 +2,7 @@ import pytest
 import psycopg
 from psycopg import sql
 
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
 
 pytest_plugins = ["tests.conftest_db"]
 

@@ -1,3 +1,4 @@
+# PS. please also refer to SERVICES summary DOCS\SERVICES\summary.md 2026/01/21
 ## Project Lineage
 
 This project originated from `RAG-Ingestion-Engine` and represents a

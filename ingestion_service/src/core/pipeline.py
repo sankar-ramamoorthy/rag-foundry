@@ -1,4 +1,4 @@
-# src/ingestion_service/core/pipeline.py
+# ingestion_service/src/core/pipeline.py
 
 from __future__ import annotations
 from typing import Any, Optional

@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 from fastapi.testclient import TestClient
 
 from ingestion_service.main import app
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.config import reset_settings_cache
 
 client = TestClient(app)
 pytest_plugins = ["tests.conftest_db"]

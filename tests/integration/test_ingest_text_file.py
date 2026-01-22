@@ -4,12 +4,12 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 from typing import cast
-from ingestion_service.core.embedders.ollama import OllamaEmbedder
+from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
 from ingestion_service.main import app
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.config import reset_settings_cache
 
 client = TestClient(app)
 pytest_plugins = ["tests.conftest_db"]

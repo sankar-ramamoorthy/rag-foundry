@@ -1,7 +1,7 @@
 # tests/core/test_embedder_factory.py - SIMPLE & BULLETPROOF
 import os
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.config import reset_settings_cache
 
 
 def test_factory_ollama_explicit():

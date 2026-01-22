@@ -1,5 +1,5 @@
-from ingestion_service.core.embedders.mock import MockEmbedder
-from ingestion_service.core.chunks import Chunk
+from ingestion_service.src.core.embedders.mock import MockEmbedder
+from ingestion_service.src.core.chunks import Chunk
 
 
 def test_mock_embedder_deterministic():

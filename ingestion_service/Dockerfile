@@ -27,4 +27,3 @@ EXPOSE 8001
 CMD ["uv", "run", "--directory", "/app/ingestion_service", \
      "uvicorn", "src.api.v1.main:app", \
      "--host", "0.0.0.0", "--port", "8001"]
-     

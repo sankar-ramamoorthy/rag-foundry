@@ -1,5 +1,5 @@
-from ingestion_service.core.vectorstore.memory import MemoryVectorStore
-from ingestion_service.core.chunks import Chunk  # ✅ use real Chunk class
+from ingestion_service.src.core.vectorstore.memory import MemoryVectorStore
+from ingestion_service.src.core.chunks import Chunk  # ✅ use real Chunk class
 
 
 def test_memory_store_persist_and_dump():

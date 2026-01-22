@@ -17,6 +17,7 @@ from shared.embedders.factory import get_embedder
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 # -------------------------------------------------------------------
 # Pydantic response models
 # -------------------------------------------------------------------
@@ -24,9 +25,11 @@ class RAGResult(BaseModel):
     answer: str
     sources: List[Optional[str]]
 
+
 class SearchResultItem(BaseModel):
     text: str
     source: Optional[str] = "N/A"
+
 
 # -------------------------------------------------------------------
 # Full RAG pipeline
@@ -36,7 +39,7 @@ async def run_rag(
     top_k: int = 5,
     provider: str | None = None,
     model: str | None = None,
-    timeout_value: int = 2000,
+    timeout_value: int = 60000,
 ) -> RAGResult:
     """
     Run the full RAG process:
@@ -58,7 +61,9 @@ async def run_rag(
     # Step 2: Search vector store
     search_url = f"{settings.VECTOR_STORE_URL}/v1/vectors/search"
     payload = {"query_vector": embedding, "k": top_k}
-    logger.debug("Searching vector store at URL: %s with payload: %s", search_url, payload)
+    logger.debug(
+        "Searching vector store at URL: %s with payload: %s", search_url, payload
+    )
 
     async with httpx.AsyncClient(timeout=timeout) as client:
         try:
@@ -82,7 +87,7 @@ async def run_rag(
         except (KeyError, TypeError) as e:
             logger.warning("Could not parse result: {}", e)  # Fixed line 1
             context_parts.append("No text available")
-    
+
     context = "\n\n".join(context_parts)
     logger.debug("Built context length: %d chars", len(context))
 
@@ -113,7 +118,11 @@ async def run_rag(
     sources = []
     for res in search_results:
         try:
-            source = res.get("metadata", {}).get("source_metadata", {}).get("source_type", "unknown")
+            source = (
+                res.get("metadata", {})
+                .get("source_metadata", {})
+                .get("source_type", "unknown")
+            )
             sources.append(source)
         except (KeyError, TypeError):
             sources.append("unknown")
@@ -123,13 +132,14 @@ async def run_rag(
         sources=sources,
     )
 
+
 # -------------------------------------------------------------------
 # Retrieval-only (no LLM)
 # -------------------------------------------------------------------
 async def search_documents(
     query: str,
     top_k: int = 5,
-    timeout_value: int = 2000,
+    timeout_value: int = 3000,
 ) -> List[SearchResultItem]:
     """
     Search the vector store and return results
@@ -149,7 +159,9 @@ async def search_documents(
 
     search_url = f"{settings.VECTOR_STORE_URL}/v1/vectors/search"
     payload = {"query_vector": embedding, "k": top_k}
-    logger.debug("Searching vector store at URL: %s with payload: %s", search_url, payload)
+    logger.debug(
+        "Searching vector store at URL: %s with payload: %s", search_url, payload
+    )
 
     async with httpx.AsyncClient(timeout=timeout) as client:
         try:
@@ -157,11 +169,14 @@ async def search_documents(
             search_resp.raise_for_status()
             search_results = search_resp.json().get("results", [])
             logger.debug("Search results count: %d", len(search_results))
-            
+
             # DEBUG: Log first result structure
             if search_results:
-                logger.debug("First result structure: %s", json.dumps(search_results[0], indent=2))
-                
+                logger.debug(
+                    "First result structure: %s",
+                    json.dumps(search_results[0], indent=2),
+                )
+
         except httpx.HTTPStatusError as exc:
             logger.error("Vector store search failed: %s", exc)
             raise HTTPException(status_code=exc.response.status_code, detail=str(exc))
@@ -174,10 +189,16 @@ async def search_documents(
     for res in search_results:
         try:
             text = res.get("metadata", {}).get("chunk_text", "No text available")
-            source = res.get("metadata", {}).get("source_metadata", {}).get("source_type", "unknown")
+            source = (
+                res.get("metadata", {})
+                .get("source_metadata", {})
+                .get("source_type", "unknown")
+            )
             parsed_results.append(SearchResultItem(text=text, source=source))
         except (KeyError, TypeError) as e:
             logger.warning("Could not parse result: {}", e)  # Fixed line 1
-            parsed_results.append(SearchResultItem(text="Parse error", source="unknown"))
-    
+            parsed_results.append(
+                SearchResultItem(text="Parse error", source="unknown")
+            )
+
     return parsed_results

@@ -1,12 +1,12 @@
 import uuid
 import pytest
 from typing import cast
-from ingestion_service.core.embedders.ollama import OllamaEmbedder
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.vectorstore.base import VectorMetadata, VectorRecord
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.vectorstore.base import VectorMetadata, VectorRecord
+from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.config import reset_settings_cache
 
 
 @pytest.mark.integration

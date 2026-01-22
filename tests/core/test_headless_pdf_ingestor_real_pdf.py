@@ -2,10 +2,10 @@
 from pathlib import Path
 from types import SimpleNamespace
 
-from ingestion_service.core.headless_ingest_pdf import HeadlessPDFIngestor
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
+from ingestion_service.src.core.headless_ingest_pdf import HeadlessPDFIngestor
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
 
 # --------------------------
 # Test: ingest a real PDF with text + screenshot

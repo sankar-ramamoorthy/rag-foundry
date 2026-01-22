@@ -6,6 +6,7 @@ app = FastAPI(title="Vector Store Service")
 app.include_router(ingestions.router)
 app.include_router(vectors.router)
 
+
 # ✅ Health check endpoint for Docker
 @app.get("/health")
 def health_check():

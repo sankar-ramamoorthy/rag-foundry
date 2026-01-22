@@ -1,8 +1,8 @@
 import fitz
 
-from ingestion_service.core.extractors.pdf import PDFExtractor
-from ingestion_service.core.document_graph.builder import DocumentGraphBuilder
-from ingestion_service.core.document_graph.models import GraphNode
+from ingestion_service.src.core.extractors.pdf import PDFExtractor
+from ingestion_service.src.core.document_graph.builder import DocumentGraphBuilder
+from ingestion_service.src.core.document_graph.models import GraphNode
 
 
 def test_document_graph_builder_creates_nodes_in_order():

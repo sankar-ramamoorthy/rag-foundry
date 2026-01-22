@@ -1,7 +1,7 @@
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.embedders.mock import MockEmbedder
-from ingestion_service.core.chunkers.base import BaseChunker
-from ingestion_service.core.chunks import Chunk
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.embedders.mock import MockEmbedder
+from ingestion_service.src.core.chunkers.base import BaseChunker
+from ingestion_service.src.core.chunks import Chunk
 from typing import Any, List
 
 

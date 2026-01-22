@@ -3,13 +3,13 @@ import pytest
 from pathlib import Path
 from typing import cast
 
-from ingestion_service.core.embedders.ollama import OllamaEmbedder
-from ingestion_service.core.headless_ingest_pdf import HeadlessPDFIngestor
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.chunkers.text import TextChunker
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
-from ingestion_service.core.config import reset_settings_cache
+from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
+from ingestion_service.src.core.headless_ingest_pdf import HeadlessPDFIngestor
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.chunkers.text import TextChunker
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.config import reset_settings_cache
 
 pytest_plugins = ["tests.conftest_db"]
 
@@ -33,7 +33,7 @@ def test_pdf_ocr_failure_does_not_abort_ingestion(
         raise RuntimeError("Simulated OCR failure")
 
     monkeypatch.setattr(
-        "ingestion_service.core.ocr.tesseract_ocr.TesseractOCR.extract_text",
+        "ingestion_service.src.core.ocr.tesseract_ocr.TesseractOCR.extract_text",
         failing_ocr,
     )
 

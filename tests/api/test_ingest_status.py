@@ -2,7 +2,7 @@
 from fastapi.testclient import TestClient
 from uuid import UUID
 import pytest
-from ingestion_service.main import app
+from ingestion_service.src.api.v1.main import app
 
 client = TestClient(app)
 

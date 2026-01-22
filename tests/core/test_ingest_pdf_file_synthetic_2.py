@@ -1,8 +1,8 @@
 # tests/core/test_ingest_pdf_file_synthetic_2.py
 import fitz  # PyMuPDF
 from typing import List, Any
-from ingestion_service.core.chunkers.base import BaseChunker
-from ingestion_service.core.chunks import Chunk
+from ingestion_service.src.core.chunkers.base import BaseChunker
+from ingestion_service.src.core.chunks import Chunk
 
 
 # --- Dummy classes for testing (no DB, no embedder) ---

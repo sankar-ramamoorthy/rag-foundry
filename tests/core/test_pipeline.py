@@ -1,8 +1,8 @@
 # tests/core/test_pipeline.py
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.chunkers.base import BaseChunker
-from ingestion_service.core.chunkers.selector import ChunkerFactory
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.chunkers.base import BaseChunker
+from ingestion_service.src.core.chunkers.selector import ChunkerFactory
 from typing import Any, List
 
 

@@ -4,15 +4,15 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import cast
 
-from ingestion_service.core.headless_ingest_pdf import HeadlessPDFIngestor
-from ingestion_service.core.pipeline import IngestionPipeline
-from ingestion_service.core.chunks import Chunk
-from ingestion_service.core.chunkers.text import TextChunker
-from ingestion_service.core.embedders.ollama import OllamaEmbedder
-from ingestion_service.core.embedders.factory import get_embedder
-from ingestion_service.core.vectorstore.pgvector_store import PgVectorStore
-from ingestion_service.core.config import reset_settings_cache
-from ingestion_service.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
+from ingestion_service.src.core.headless_ingest_pdf import HeadlessPDFIngestor
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.chunks import Chunk
+from ingestion_service.src.core.chunkers.text import TextChunker
+from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
+from ingestion_service.src.core.embedders.factory import get_embedder
+from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.config import reset_settings_cache
+from ingestion_service.src.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
 
 pytest_plugins = ["tests.conftest_db"]
 
