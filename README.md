@@ -45,13 +45,13 @@ The original repository remains stable and unchanged.
 
 ---
 
-## **MVP Scope**
+## **Original Scope**
 
-* Core text ingestion (MS2) ✅
-* Thin UI for file/text upload (Gradio) ✅
-* Image & OCR ingestion (MS3) ⬜
-* Document linking & metadata enrichment (MS4) ⬜
-* Persistent vector storage (part of MVP / MS2a) ⬜
+* Core text ingestion  ✅
+* Thin UI for file/text upload  ✅
+* Image & OCR ingestion  ⬜
+* Document linking & metadata enrichment  ⬜
+* Persistent vector storage  ⬜
 * Modular, extendable architecture for platform integration
 
 ---
