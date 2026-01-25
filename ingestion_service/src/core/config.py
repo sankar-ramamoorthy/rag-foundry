@@ -1,4 +1,4 @@
-# src/ingestion_service/core/config.py
+# ingestion_service/src/core/config.py
 
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict

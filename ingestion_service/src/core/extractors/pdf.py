@@ -1,4 +1,4 @@
-# src/ingestion_service/core/extractors/pdf.py
+# ingestion_service/src/core/extractors/pdf.py
 from __future__ import annotations
 from typing import List, Tuple
 import fitz  # PyMuPDF

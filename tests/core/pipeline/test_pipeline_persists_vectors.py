@@ -4,7 +4,7 @@ from typing import cast
 
 from ingestion_service.src.core.pipeline import IngestionPipeline
 from ingestion_service.src.core.embedders.ollama import OllamaEmbedder
-from ingestion_service.src.core.embedders.factory import get_embedder
+#from ingestion_service.src.core.embedders.factory import get_embedder
 from ingestion_service.src.core.chunkers.text import TextChunker
 #from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
 from ingestion_service.src.core.http_vectorstore import HttpVectorStore
@@ -27,8 +27,9 @@ def test_pipeline_persists_vectors_pgvector(clean_vectors_table, test_database_u
         ollama_model=settings.OLLAMA_EMBED_MODEL,
         ollama_batch_size=settings.OLLAMA_BATCH_SIZE,
     )
+    provider=settings.EMBEDDING_PROVIDER
 
-    embedder = cast(OllamaEmbedder, get_embedder("ollama"))
+    #embedder = cast(OllamaEmbedder, get_embedder("ollama"))
     assert embedder.dimension == 768
 
     #vector_store = PgVectorStore(

@@ -1,4 +1,4 @@
-# src/ingestion_service/core/ocr/utils.py
+# ingestion_service/src/core/ocr/utils.py
 import logging
 
 from src.core.extractors.base import ExtractedArtifact
