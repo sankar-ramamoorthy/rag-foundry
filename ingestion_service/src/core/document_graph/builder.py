@@ -1,4 +1,4 @@
-# src/ingestion_service/core/document_graph/builder.py
+# ingestion_service/src/core/document_graph/builder.py
 from __future__ import annotations
 
 from collections import defaultdict

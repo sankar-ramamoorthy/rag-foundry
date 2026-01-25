@@ -1,4 +1,4 @@
-# src/ingestion_service/core/chunkers/selector.py
+# ingestion_service/src/core/chunkers/selector.py
 
 from typing import Any, Dict
 from shared.chunkers.base import BaseChunker

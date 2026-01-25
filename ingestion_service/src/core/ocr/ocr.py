@@ -1,4 +1,4 @@
-# src/ingestion_service/core/ocr/ocr.py
+# ingestion_service/src/core/ocr/ocr.py
 
 from abc import ABC, abstractmethod
 

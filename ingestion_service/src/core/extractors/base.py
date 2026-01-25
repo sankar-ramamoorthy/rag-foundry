@@ -1,4 +1,4 @@
-# src/ingestion_service/core/extractors/base.py
+# ingestion_service/src/core/extractors/base.py
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

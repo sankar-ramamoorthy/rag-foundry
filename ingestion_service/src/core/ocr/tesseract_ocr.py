@@ -1,4 +1,4 @@
-# src/ingestion_service/core/ocr/tesseract_ocr.py
+# ingestion_service/src/core/ocr/tesseract_ocr.py
 
 from PIL import Image
 import pytesseract

@@ -1,4 +1,4 @@
-# src/ingestion_service/core/document_graph/models.py
+# ingestion_service/src/core/document_graph/models.py
 from __future__ import annotations
 
 from dataclasses import dataclass

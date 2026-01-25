@@ -1,4 +1,4 @@
-# src/ingestion_service/core/chunks.py
+# ingestion_service/src/core/chunks.py
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional

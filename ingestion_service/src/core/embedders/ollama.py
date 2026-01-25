@@ -1,4 +1,4 @@
-# src/ingestion_service/core/embedders/ollama.py
+# ingestion_service/src/core/embedders/ollama.py
 import requests
 import logging
 from typing import List

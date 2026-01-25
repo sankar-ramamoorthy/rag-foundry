@@ -1,4 +1,4 @@
-# src/ingestion_service/core/embedders/factory.py
+# ingestion_service/src/core/embedders/factory.py
 from shared.embedders.mock import MockEmbedder
 from shared.embedders.ollama import OllamaEmbedder
 from src.core.config import get_settings

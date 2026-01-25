@@ -1,4 +1,4 @@
-# src/ingestion_service/core/chunkers/base.py
+# ingestion_service/src/core/chunkers/base.py
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, List
