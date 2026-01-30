@@ -3,6 +3,9 @@
 
 # Dated 2026/01/29
 
+⚠️ Superseded
+This document reflects an earlier conceptual model of ingestion.
+See ingestion-data-model-as-built.md for the authoritative current state
 ---
 
 ## Engineering Design Document
