@@ -5,22 +5,22 @@ from typing import Optional
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, status
 
-from src.api.v1.models import IngestRequest, IngestResponse
-from src.core.database_session import get_sessionmaker
-from src.core.models import IngestionRequest
-from src.core.pipeline import IngestionPipeline
-from src.core.status_manager import StatusManager
+from ingestion_service.src.api.v1.models import IngestRequest, IngestResponse
+from ingestion_service.src.core.database_session import get_sessionmaker
+from ingestion_service.src.core.models import IngestionRequest
+from ingestion_service.src.core.pipeline import IngestionPipeline
+from ingestion_service.src.core.status_manager import StatusManager
 
-# from src.core.vectorstore.pgvector_store import PgVectorStore
-from src.core.http_vectorstore import HttpVectorStore
-from src.core.config import get_settings
+# from ingestion_service.src.core.vectorstore.pgvector_store import PgVectorStore
+from ingestion_service.src.core.http_vectorstore import HttpVectorStore
+from ingestion_service.src.core.config import get_settings
 from shared.embedders.factory import get_embedder
-from src.core.ocr.ocr_factory import get_ocr_engine
-from src.core.extractors.pdf import PDFExtractor
+from ingestion_service.src.core.ocr.ocr_factory import get_ocr_engine
+from ingestion_service.src.core.extractors.pdf import PDFExtractor
 
 # 🔽 NEW IMPORTS (MS4)
-from src.core.document_graph.builder import DocumentGraphBuilder
-from src.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
+from ingestion_service.src.core.document_graph.builder import DocumentGraphBuilder
+from ingestion_service.src.core.chunk_assembly.pdf_chunk_assembler import PDFChunkAssembler
 
 router = APIRouter(tags=["ingestion"])
 SessionLocal = get_sessionmaker()
